@@ -82,4 +82,9 @@ public class AutorControlador {
         noticiaServicio.update(noticia);
         return "redirect:/autores";
     }
+
+    @GetMapping("/sueldos")
+    public String sueldos(){
+        return "sueldos.html";
+    }
 }
