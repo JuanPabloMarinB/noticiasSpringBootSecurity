@@ -5,9 +5,12 @@
 package com.circuitosinteligentes.primer_proyecto_spring.Controller;
 
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Autor;
+import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Imagen;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Noticia;
 import com.circuitosinteligentes.primer_proyecto_spring.Servicio.IAutorServicio;
 import com.circuitosinteligentes.primer_proyecto_spring.Servicio.INoticiaServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.Servicio.ImagenServicioImp;
+import com.circuitosinteligentes.primer_proyecto_spring.exceptions.ArchivoInvalidoException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -31,78 +34,72 @@ import org.springframework.web.multipart.MultipartFile;
 @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_AUTOR')")
 @Controller
 public class NoticiaControlador {
-
+    
+    @Autowired
+    private ImagenServicioImp imagenServicio;
     @Autowired
     private INoticiaServicio noticiaServicio;
-
+    
     @Autowired
     private IAutorServicio autorServ;
-
+    
     @GetMapping("/portal")
     public String home(ModelMap modelmap) {
         List<Noticia> noticias = noticiaServicio.findAll();
-
+        
         Collections.sort(noticias, (n1, n2) -> n2.getId().compareTo(n1.getId()));
         modelmap.addAttribute("noticia", noticias);
-
+        
         return "index.html";
     }
-
+    
     @GetMapping("/noticias")
     public String index(ModelMap modelmap) {
         List<Noticia> noticias = noticiaServicio.findAll();
         modelmap.addAttribute("noticia", noticias);
         return "noticiasAdmin.html";
     }
-
+    
     @GetMapping("/autores")
     public String indexAutor(ModelMap modelmap) {
         List<Noticia> noticias = noticiaServicio.findAll();
         modelmap.addAttribute("noticia", noticias);
         return "autor.html";
     }
-
+    
     @GetMapping("/create")
     public String create(ModelMap modelMap) {
         Noticia noticia = new Noticia();
         modelMap.addAttribute("noticia", noticia);
         return "crear.html";
     }
-
+    
     @PostMapping("/save")
     public String save(@RequestParam("file") MultipartFile file, Noticia noticia, String autorNombre,
-            String autorApellido) throws IOException {
-
-        String rutaProyecto = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-        System.out.println(rutaProyecto);
+            String autorApellido) throws IOException, ArchivoInvalidoException {
+        
         if (autorNombre != null && autorApellido != null) {
             Autor autor = new Autor();
             autor.setNombre(autorNombre);
             autor.setApellido(autorApellido);
             autor = autorServ.save(autor);
             noticia.setAutor(autor);
-            if (!file.isEmpty()) {
-                String fileName = file.getOriginalFilename();
-                String uploadDir = rutaProyecto + "/src/main/resources/static/notieggimagenes/";
-
-                File dest = new File(uploadDir + fileName);
-                file.transferTo(dest);
-                String rutaImagen = "/notieggimagenes/" + fileName;
-                noticia.setRutaImagen(rutaImagen);
-            }
+            Imagen imagen = imagenServicio.save(file);
+            
+            noticia.setImagen(imagen);
             noticiaServicio.save(noticia);
         }
         return "redirect:/noticias";
     }
-
+    
     @GetMapping("/noticia/{id}") // URL a donde me dirige
     public String noticia(@PathVariable Integer id, ModelMap modelmap) {// ModelMap permite pasar valores al HTML para
-                                                                        // que realice operaciones
+        // que realice operaciones
         Noticia noticia = noticiaServicio.getById(id).get();
         modelmap.addAttribute("noticia", noticia);
         return "noticiaPage.html";
     }
-
+    
     @GetMapping("/editar/{id}")
     public String edit(@PathVariable Integer id, ModelMap modelmap) {
         Noticia noticia = noticiaServicio.getById(id).get();
@@ -111,7 +108,7 @@ public class NoticiaControlador {
         modelmap.addAttribute("noticia", noticia);
         return "edit.html";
     }
-
+    
     @PostMapping("/update")
     public String update(@ModelAttribute("noticia") Noticia noticia) {
         Noticia noticiaActual = noticiaServicio.getById(noticia.getId()).get();
@@ -119,14 +116,14 @@ public class NoticiaControlador {
         autorActual.setNombre(noticia.getAutor().getNombre());
         autorActual.setApellido(noticia.getAutor().getApellido());
         autorServ.update(autorActual);
-
+        
         noticiaActual.setTitulo(noticia.getTitulo());
         noticiaActual.setCuerpo(noticia.getCuerpo());
         noticiaServicio.update(noticiaActual);
-
+        
         return "redirect:/noticias";
     }
-
+    
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Integer id) {
         noticiaServicio.delete(id);
