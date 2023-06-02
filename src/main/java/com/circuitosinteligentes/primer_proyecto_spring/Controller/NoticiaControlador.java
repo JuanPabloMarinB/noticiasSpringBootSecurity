@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import javax.servlet.annotation.MultipartConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -109,8 +110,8 @@ public class NoticiaControlador {
         return "edit.html";
     }
     
-    @PostMapping("/update")
-    public String update(@ModelAttribute("noticia") Noticia noticia) {
+    @PostMapping("/update/{id}")
+    public String update(MultipartFile file, @ModelAttribute("noticia") Noticia noticia) throws ArchivoInvalidoException {
         Noticia noticiaActual = noticiaServicio.getById(noticia.getId()).get();
         Autor autorActual = noticiaActual.getAutor();
         autorActual.setNombre(noticia.getAutor().getNombre());
@@ -119,7 +120,18 @@ public class NoticiaControlador {
         
         noticiaActual.setTitulo(noticia.getTitulo());
         noticiaActual.setCuerpo(noticia.getCuerpo());
+        
+        Integer idImagen = null;
+        
+        if(noticiaActual.getImagen()!=null){
+            idImagen = noticiaActual.getImagen().getId();
+        }
+        
+        Imagen imagen = imagenServicio.update(file, idImagen);
+        
         noticiaServicio.update(noticiaActual);
+        
+        
         
         return "redirect:/noticias";
     }

@@ -1,4 +1,3 @@
-
 package com.circuitosinteligentes.primer_proyecto_spring.Servicio;
 
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Imagen;
@@ -8,27 +7,26 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ImagenServicioImp implements IImagenServicio {
-    
+
     @Autowired
     RepositorioImagen imagenRepositorio;
-    
-    
+
     @Override
-    public Imagen save(MultipartFile archivo) throws ArchivoInvalidoException{
-        if(archivo!=null) {
+    public Imagen save(MultipartFile archivo) throws ArchivoInvalidoException {
+        if (archivo != null) {
             try {
                 Imagen imagen = new Imagen();
-                
-                if ((archivo.getContentType()=="jpg") || (archivo.getContentType()=="png")) {
-                    imagen.setMime(archivo.getContentType());
-                }
+
+                imagen.setMime(archivo.getContentType());
+
                 imagen.setNombre(archivo.getName());
                 imagen.setContenido(archivo.getBytes());
-                
+
                 return imagenRepositorio.save(imagen);
             } catch (Exception e) {
                 System.err.println(e.getMessage());
@@ -38,25 +36,25 @@ public class ImagenServicioImp implements IImagenServicio {
     }
 
     @Override
-    public Imagen update(MultipartFile archivo, Integer id) throws ArchivoInvalidoException{
-        if(archivo!=null) {
+    @Transactional
+    public Imagen update(MultipartFile archivo, Integer id) throws ArchivoInvalidoException {
+        if (archivo != null) {
             try {
                 Imagen imagen = new Imagen();
-                
-                if(id!= null) {
+
+                if (id != null) {
                     Optional<Imagen> respuesta = imagenRepositorio.findById(id);
-                    if(respuesta.isPresent()) {
+                    if (respuesta.isPresent()) {
                         imagen = respuesta.get();
                     }
-                            
+
                 }
-                
-                if ((archivo.getContentType()=="jpg") || (archivo.getContentType()=="png")) {
-                    imagen.setMime(archivo.getContentType());
-                }
+
+                imagen.setMime(archivo.getContentType());
+
                 imagen.setNombre(archivo.getName());
                 imagen.setContenido(archivo.getBytes());
-                
+
                 return imagenRepositorio.save(imagen);
             } catch (Exception e) {
                 System.out.println(e.getMessage());

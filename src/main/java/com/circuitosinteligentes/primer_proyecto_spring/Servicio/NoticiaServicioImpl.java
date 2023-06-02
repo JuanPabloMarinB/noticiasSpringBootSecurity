@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -32,6 +33,7 @@ public class NoticiaServicioImpl implements INoticiaServicio {
     }
 
     @Override
+    @Transactional
     public void update(Noticia noticia) {
         noticiaRepositorio.save(noticia);
     }
@@ -44,6 +46,10 @@ public class NoticiaServicioImpl implements INoticiaServicio {
     @Override
     public Noticia save(Noticia noticia) {
         return noticiaRepositorio.save(noticia);
+    }
+
+    public Noticia getOne(Integer id) {
+        return noticiaRepositorio.getOne(id);
     }
 
 }
