@@ -42,7 +42,7 @@ public class AutorControlador {
     }
     
     @PostMapping("/saveNoti")
-    public String save(@RequestParam("file") MultipartFile file, Noticia noticia, String autorNombre, String autorApellido) throws IOException {
+    public String save(@RequestParam("file") MultipartFile file, Noticia noticia, String autorNombre, String autorApellido, Integer sueldoMensual) throws IOException {
 
         String rutaProyecto = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
         System.out.println(rutaProyecto);
@@ -51,6 +51,7 @@ public class AutorControlador {
             Autor autor = new Autor();
             autor.setNombre(autorNombre);
             autor.setApellido(autorApellido);
+            autor.setSueldoMensual(sueldoMensual);
             autor = autorServ.save(autor);
             noticia.setAutor(autor);
 
@@ -82,4 +83,8 @@ public class AutorControlador {
         noticiaServicio.update(noticia);
         return "redirect:/autores";
     }
+
+    
+    
+    
 }

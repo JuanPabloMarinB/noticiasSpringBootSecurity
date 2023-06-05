@@ -71,7 +71,7 @@ public class NoticiaControlador {
 
     @PostMapping("/save")
     public String save(@RequestParam("file") MultipartFile file, Noticia noticia, String autorNombre,
-            String autorApellido) throws IOException {
+            String autorApellido, Integer sueldoMensual) throws IOException {
 
         String rutaProyecto = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
         System.out.println(rutaProyecto);
@@ -79,6 +79,7 @@ public class NoticiaControlador {
             Autor autor = new Autor();
             autor.setNombre(autorNombre);
             autor.setApellido(autorApellido);
+            autor.setSueldoMensual(sueldoMensual);
             autor = autorServ.save(autor);
             noticia.setAutor(autor);
             if (!file.isEmpty()) {
@@ -118,6 +119,7 @@ public class NoticiaControlador {
         Autor autorActual = noticiaActual.getAutor();
         autorActual.setNombre(noticia.getAutor().getNombre());
         autorActual.setApellido(noticia.getAutor().getApellido());
+        autorActual.setSueldoMensual(noticia.getAutor().getSueldoMensual());
         autorServ.update(autorActual);
 
         noticiaActual.setTitulo(noticia.getTitulo());

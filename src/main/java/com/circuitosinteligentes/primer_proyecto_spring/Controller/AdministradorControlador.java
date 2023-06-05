@@ -10,8 +10,10 @@ import com.circuitosinteligentes.primer_proyecto_spring.Servicio.IAutorServicio;
 import com.circuitosinteligentes.primer_proyecto_spring.Servicio.INoticiaServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -19,6 +21,9 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 @Controller
 public class AdministradorControlador {
+    
+   // @Autowired
+    //private Autor autores;
 
     @Autowired
     private IAutorServicio autorServicio;
@@ -37,9 +42,14 @@ public class AdministradorControlador {
     }
 
     @PostMapping("/save/autor")
-    public String saveAutor(Autor autor) {
+    public String saveAutor(@RequestParam String nombre, @RequestParam String apellido, @RequestParam Integer sueldoMensual, ModelMap modelMap) {
+      Autor autor = new Autor();
+        autor.setNombre(nombre);
+        autor.setApellido(apellido);
+        autor.setSueldoMensual(sueldoMensual);
         autor.setRol(Rol.AUTOR);
         autorServicio.save(autor);
+        modelMap.addAttribute("autor", autor);
 
         return "redirect:/noticias";
 
