@@ -18,8 +18,9 @@
     <div class="m-3">
       <form
         class="container"
-        th:action="@{/update}"
+        th:action="@{/update/__${noticia.id}__}"
         th:object="${noticia}"
+        enctype="multipart/form-data"
         method="post"
       >
         <h2>Actualizar Noticia</h2>
@@ -53,6 +54,19 @@
               autocomplete="off"
             >
             </textarea>
+          </div>
+        </div>
+        <div class="form-group text-center">
+          <label class="control-label mb-2" for="descripcion">Imagen:</label>
+          <div>
+            <input
+              type="file"
+              name="file"
+              required
+            />
+            <div id="errorArchivo" style="display: none">
+              El archivo seleccionado es demasiado grande.
+            </div>
           </div>
         </div>
         <div class="form-group">

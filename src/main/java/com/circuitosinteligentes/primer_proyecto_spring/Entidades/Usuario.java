@@ -12,6 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import lombok.Data;
 
 /**
@@ -29,6 +30,9 @@ public class Usuario {
     private String apellido;
     private String email;
     private String password;
+    
+    @OneToOne
+    private Imagen imagen;
     
     @Enumerated(EnumType.STRING)
     private Rol rol;
