@@ -21,6 +21,7 @@ import javax.servlet.annotation.MultipartConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -67,12 +68,23 @@ public class NoticiaControlador {
         List<Noticia> noticias = noticiaServicio.findAll();
         modelmap.addAttribute("noticia", noticias);
         return "autor.html";
+    }   
+
+    @GetMapping("/seleccionar-autor")
+    public String seleccionarAutor(Model model) {
+        List<Autor> autor = autorServ.findAll();
+
+        model.addAttribute("autor", autor);
+
+        return "seleccionar.html";
     }
-    
+
     @GetMapping("/create")
     public String create(ModelMap modelMap) {
         Noticia noticia = new Noticia();
         modelMap.addAttribute("noticia", noticia);
+        List<Autor> autores = autorServ.findAll();
+        modelMap.addAttribute("autor", autores);
         return "crear.html";
     }
     
