@@ -4,6 +4,7 @@
  */
 package com.circuitosinteligentes.primer_proyecto_spring.Repositorio;
 
+
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Autor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,5 +15,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface RepositorioAutor extends JpaRepository<Autor, Integer> {
+    
+    public Autor findByEmail(String email);
 
 }
