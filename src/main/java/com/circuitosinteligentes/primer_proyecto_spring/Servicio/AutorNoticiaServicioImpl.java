@@ -8,9 +8,12 @@ import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Administrador;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Autor;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Noticia;
 import com.circuitosinteligentes.primer_proyecto_spring.Repositorio.Repositorio;
-import com.circuitosinteligentes.primer_proyecto_spring.Repositorio.RepositorioAutor;
+
 import java.util.List;
 import java.util.Optional;
+
+import com.circuitosinteligentes.primer_proyecto_spring.interfaces.IAutorNoticiaServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.interfaces.IAutorServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

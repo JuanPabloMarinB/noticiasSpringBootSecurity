@@ -3,8 +3,10 @@ package com.circuitosinteligentes.primer_proyecto_spring.Servicio;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Imagen;
 import com.circuitosinteligentes.primer_proyecto_spring.Repositorio.RepositorioImagen;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.ArchivoInvalidoException;
-import java.util.List;
+
 import java.util.Optional;
+
+import com.circuitosinteligentes.primer_proyecto_spring.interfaces.IImagenServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

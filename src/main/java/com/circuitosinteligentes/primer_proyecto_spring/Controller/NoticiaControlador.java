@@ -7,17 +7,16 @@ package com.circuitosinteligentes.primer_proyecto_spring.Controller;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Autor;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Imagen;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Noticia;
-import com.circuitosinteligentes.primer_proyecto_spring.Servicio.IAutorServicio;
-import com.circuitosinteligentes.primer_proyecto_spring.Servicio.INoticiaServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.interfaces.IAutorServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.interfaces.INoticiaServicio;
 import com.circuitosinteligentes.primer_proyecto_spring.Servicio.ImagenServicioImp;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.ArchivoInvalidoException;
-import java.io.File;
+
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import javax.servlet.annotation.MultipartConfig;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

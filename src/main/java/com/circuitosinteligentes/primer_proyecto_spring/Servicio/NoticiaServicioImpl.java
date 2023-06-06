@@ -8,6 +8,8 @@ import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Noticia;
 import com.circuitosinteligentes.primer_proyecto_spring.Repositorio.Repositorio;
 import java.util.List;
 import java.util.Optional;
+
+import com.circuitosinteligentes.primer_proyecto_spring.interfaces.INoticiaServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

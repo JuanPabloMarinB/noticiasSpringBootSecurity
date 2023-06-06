@@ -6,8 +6,8 @@ package com.circuitosinteligentes.primer_proyecto_spring.Controller;
 
 import com.circuitosinteligentes.primer_proyecto_spring.Enumeraciones.Rol;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Autor;
-import com.circuitosinteligentes.primer_proyecto_spring.Servicio.IAutorServicio;
-import com.circuitosinteligentes.primer_proyecto_spring.Servicio.INoticiaServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.interfaces.IAutorServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.interfaces.INoticiaServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
