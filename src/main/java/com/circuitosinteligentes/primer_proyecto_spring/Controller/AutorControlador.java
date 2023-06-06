@@ -5,13 +5,18 @@
 package com.circuitosinteligentes.primer_proyecto_spring.Controller;
 
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Autor;
+import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Imagen;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Noticia;
 import com.circuitosinteligentes.primer_proyecto_spring.Servicio.IAutorServicio;
 import com.circuitosinteligentes.primer_proyecto_spring.Servicio.INoticiaServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.Servicio.ImagenServicioImp;
+import com.circuitosinteligentes.primer_proyecto_spring.Servicio.UsuarioServicioImpl;
+import com.circuitosinteligentes.primer_proyecto_spring.exceptions.ArchivoInvalidoException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -33,19 +38,22 @@ public class AutorControlador {
     private IAutorServicio autorServ;
 
     @Autowired
+    private ImagenServicioImp imagenServicio;
+
+    @Autowired
     private INoticiaServicio noticiaServicio;
+
+    @Autowired
+    private UsuarioServicioImpl usuarioServicio;
 
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_AUTOR')")
     @GetMapping("/autorPortal")
     public String panelAutor(ModelMap modelmap) {
         return "redirect:/autores";
     }
-    
-    @PostMapping("/saveNoti")
-    public String save(@RequestParam("file") MultipartFile file, Noticia noticia, String autorNombre, String autorApellido) throws IOException {
 
-        String rutaProyecto = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-        System.out.println(rutaProyecto);
+    @PostMapping("/saveNoti")
+    public String save(@RequestParam("file") MultipartFile notifile, MultipartFile usufile, Noticia noticia, String autorNombre, String autorApellido) throws IOException, ArchivoInvalidoException {
 
         if (autorNombre != null && autorApellido != null) {
             Autor autor = new Autor();
@@ -54,15 +62,11 @@ public class AutorControlador {
             autor = autorServ.save(autor);
             noticia.setAutor(autor);
 
-            if (!file.isEmpty()) {
-                String fileName = file.getOriginalFilename();
-                String uploadDir = rutaProyecto + "/src/main/resources/static/notieggimagenes/";
-
-                File dest = new File(uploadDir + fileName);
-                file.transferTo(dest);
-                String rutaImagen = "/notieggimagenes/" + fileName;
-                noticia.setRutaImagen(rutaImagen);
-            }
+            Imagen imagenautor = imagenServicio.save(usufile);
+            autor.setImagen(imagenautor);
+            autorServ.save(autor);
+            Imagen notimagen = imagenServicio.save(notifile);
+            noticia.setImagen(notimagen);
             noticiaServicio.save(noticia);
         }
         return "redirect:/autores";
@@ -78,8 +82,35 @@ public class AutorControlador {
     }
 
     @PostMapping("/updateNoti")
-    public String update(Noticia noticia) {
+    public String update(MultipartFile notifile, MultipartFile usufile, @PathVariable Integer id, @RequestParam("nombre") String nombre,
+            @RequestParam("apellido") String apellido,
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
+            @RequestParam("password2") String password2, ModelMap model) throws ArchivoInvalidoException {
+
+        Noticia noticia = noticiaServicio.getById(id).get();
+
+        Autor autorActual = noticia.getAutor();
+
+        autorActual.setNombre(noticia.getAutor().getNombre());
+        autorActual.setApellido(noticia.getAutor().getApellido());
+        autorActual.setEmail(noticia.getAutor().getEmail());
+        autorActual.setPassword(noticia.getAutor().getPassword());
+        Integer idImagen = null;
+
+        if (autorActual.getImagen() != null) {
+            idImagen = autorActual.getImagen().getId();
+        }
+
+        Imagen imagen = imagenServicio.update(usufile, idImagen);
+        autorActual.setImagen(imagen);
+        autorServ.update(autorActual);
+
+        noticia.setTitulo(noticia.getTitulo());
+        noticia.setCuerpo(noticia.getCuerpo());
         noticiaServicio.update(noticia);
-        return "redirect:/autores";
+        model.put("exito", "Noticia actualizada correctamente");
+        return "index.html";
+
     }
 }
