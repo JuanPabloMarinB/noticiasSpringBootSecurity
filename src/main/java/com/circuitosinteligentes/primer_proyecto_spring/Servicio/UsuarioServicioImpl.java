@@ -4,10 +4,13 @@
  */
 package com.circuitosinteligentes.primer_proyecto_spring.Servicio;
 
+import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Imagen;
+import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Noticia;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Usuario;
 import com.circuitosinteligentes.primer_proyecto_spring.Enumeraciones.Rol;
 import com.circuitosinteligentes.primer_proyecto_spring.Repositorio.RepositorioUsuario;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.ApellidoInvalidoException;
+import com.circuitosinteligentes.primer_proyecto_spring.exceptions.ArchivoInvalidoException;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.EmailInvalidoException;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.NombreInvalidoException;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.Password2InvalidoException;
@@ -28,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -38,8 +42,11 @@ public class UsuarioServicioImpl implements IUsuarioServicio, UserDetailsService
 
     @Autowired
     private RepositorioUsuario usuarioRepositorio;
+    
+    @Autowired
+    private ImagenServicioImp imagenServicio;
 
-    @Override
+   @Override
     public List<Usuario> findAll() {
         return usuarioRepositorio.findAll();
     }
@@ -49,25 +56,25 @@ public class UsuarioServicioImpl implements IUsuarioServicio, UserDetailsService
         return usuarioRepositorio.findById(id);
     }
 
-    @Override
-    public void update(Usuario usuario) {
-        usuarioRepositorio.save(usuario);
-    }
 
-    @Override
+   @Override
     public void delete(Integer id) {
         usuarioRepositorio.deleteById(id);
     }
 
-    @Override
+   @Override
     public Usuario save(Usuario usuario) {
         return usuarioRepositorio.save(usuario);
     }
+    
+    public Usuario getOne(Integer id) {
+        return usuarioRepositorio.getOne(id);
+    }
 
     @Transactional
-    public void registrar(String nombre, String apellido, String email, String password, String password2)
+        public void registrar(MultipartFile file, String nombre, String apellido, String email, String password, String password2)
             throws NombreInvalidoException, ApellidoInvalidoException, EmailInvalidoException,
-            PasswordInvalidoException, Password2InvalidoException {
+            PasswordInvalidoException, Password2InvalidoException, ArchivoInvalidoException {
         validar(nombre, apellido, email, password, password2);
         Usuario usuario = new Usuario();
         usuario.setNombre(nombre);
@@ -75,9 +82,34 @@ public class UsuarioServicioImpl implements IUsuarioServicio, UserDetailsService
         usuario.setEmail(email);
         usuario.setPassword(new BCryptPasswordEncoder().encode(password));
         usuario.setRol(Rol.USER);
+        Imagen imagen = imagenServicio.save(file);
+        usuario.setImagen(imagen);
         usuarioRepositorio.save(usuario);
     }
 
+    @Transactional
+    public void update(MultipartFile file, String nombre, String apellido, String email, String password,String password2, Integer idUsuario) throws NombreInvalidoException, ApellidoInvalidoException, EmailInvalidoException,
+            PasswordInvalidoException, Password2InvalidoException, ArchivoInvalidoException {
+        
+        validar(nombre, apellido, email, password, password2);
+        Optional<Usuario> respuesta= usuarioRepositorio.findById(idUsuario); 
+        if(respuesta.isPresent()){
+        Usuario usuario = respuesta.get();    
+        usuario.setNombre(nombre);
+        usuario.setApellido(apellido);
+        usuario.setEmail(email);
+        usuario.setPassword(new BCryptPasswordEncoder().encode(password));
+        usuario.setRol(Rol.USER);
+        Integer idImagen = null;
+        if(usuario.getImagen()!= null){
+            idImagen = usuario.getImagen().getId();
+        }
+        Imagen imagen= imagenServicio.update(file, idImagen);
+        usuario.setImagen(imagen);
+        usuarioRepositorio.save(usuario);
+        }
+    }
+    
     public void validar(String nombre, String apellido, String email, String password, String password2)
             throws NombreInvalidoException, ApellidoInvalidoException, EmailInvalidoException,
             PasswordInvalidoException, Password2InvalidoException {
@@ -116,4 +148,7 @@ public class UsuarioServicioImpl implements IUsuarioServicio, UserDetailsService
 
         return new User(usuario.getEmail(), usuario.getPassword(), authorities);
     }
+
+   
+   
 }

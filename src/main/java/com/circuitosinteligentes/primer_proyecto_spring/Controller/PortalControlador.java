@@ -7,6 +7,7 @@ package com.circuitosinteligentes.primer_proyecto_spring.Controller;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Usuario;
 import com.circuitosinteligentes.primer_proyecto_spring.Servicio.IUsuarioServicio;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.ApellidoInvalidoException;
+import com.circuitosinteligentes.primer_proyecto_spring.exceptions.ArchivoInvalidoException;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.EmailInvalidoException;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.NombreInvalidoException;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.Password2InvalidoException;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -52,9 +55,9 @@ public class PortalControlador {
             @RequestParam("email") String email,
             @RequestParam("password") String password,
             @RequestParam("password2") String password2,
-            Model model) {
+            Model model, MultipartFile file) {
         try {
-            usuarioServicio.registrar(nombre, apellido, email, password, password2);
+            usuarioServicio.registrar(file, nombre, apellido, email, password, password2);
             return "inicio.html";
         } catch (NombreInvalidoException e) {
             model.addAttribute("errorNombre", "El nombre es inválido");
@@ -66,6 +69,8 @@ public class PortalControlador {
             model.addAttribute("errorPassword", "La contraseña es inválida");
         } catch (Password2InvalidoException e) {
             model.addAttribute("errorPassword2", "Las contraseñas no coinciden");
+        }catch (ArchivoInvalidoException e) {
+            model.addAttribute("errorAlCargarArchivo", "El archivo es nulo");
         } catch (Exception e) {
             model.addAttribute("error", "Error al registrar usuario");
         }
@@ -93,4 +98,33 @@ public class PortalControlador {
         }
         return "redirect:/portal";
     }
+    
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_AUTOR')")
+    @GetMapping("/perfil")
+    public String perfil(HttpSession session, ModelMap model) {
+        Usuario logueado = (Usuario) session.getAttribute("usuariosession");
+        model.put("usuario",logueado );
+        return "usuario_update.html";
+    }
+    
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_AUTOR')")
+    @PostMapping("/perfil/{id}")
+    public String update(MultipartFile file, @PathVariable Integer id, @RequestParam("nombre") String nombre,
+            @RequestParam("apellido") String apellido,
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
+            @RequestParam("password2") String password2, ModelMap model) {
+        
+        try {
+            usuarioServicio.update(file, nombre, apellido, email, password, password2, id);
+            model.put("exito","Usuario actualizado correctamente" );
+            return "index.html";
+        }catch (Exception e){
+            model.put("error", e.getMessage());
+            model.put("nombre", nombre);
+            model.put("apellido", apellido);
+            model.put("email", email);
+        return "usuario_update.html";}
+    }
 }
+
