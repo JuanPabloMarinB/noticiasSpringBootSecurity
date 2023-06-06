@@ -68,7 +68,7 @@ public class NoticiaControlador {
         List<Noticia> noticias = noticiaServicio.findAll();
         modelmap.addAttribute("noticia", noticias);
         return "autor.html";
-    }   
+    }
 
     @GetMapping("/seleccionar-autor")
     public String seleccionarAutor(Model model) {
