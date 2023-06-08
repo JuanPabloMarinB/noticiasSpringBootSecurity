@@ -20,6 +20,7 @@
   padding: auto 50px;
   font-size: 20px;
   background-color: #ffcf00;
+  color: #242424;
 }
 .btn-custom:hover {
   border: #ffcf00 solid 1px;

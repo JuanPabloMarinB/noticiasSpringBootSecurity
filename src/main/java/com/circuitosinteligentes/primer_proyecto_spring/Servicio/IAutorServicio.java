@@ -7,6 +7,10 @@ package com.circuitosinteligentes.primer_proyecto_spring.Servicio;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Autor;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -15,8 +19,12 @@ import java.util.Optional;
 public interface IAutorServicio {
 
     public List<Autor> findAll();
+
     public Optional<Autor> getById(Integer id);
+
     public void update(Autor autor);
+
     public void delete(Integer id);
+
     public Autor save(Autor autor);
 }
