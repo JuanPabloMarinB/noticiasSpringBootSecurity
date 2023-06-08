@@ -7,16 +7,13 @@ package com.circuitosinteligentes.primer_proyecto_spring.Controller;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Autor;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Imagen;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Noticia;
-import com.circuitosinteligentes.primer_proyecto_spring.Servicio.IAutorServicio;
-import com.circuitosinteligentes.primer_proyecto_spring.Servicio.INoticiaServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.interfaces.IAutorServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.interfaces.INoticiaServicio;
 import com.circuitosinteligentes.primer_proyecto_spring.Servicio.ImagenServicioImp;
 import com.circuitosinteligentes.primer_proyecto_spring.Servicio.UsuarioServicioImpl;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.ArchivoInvalidoException;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -53,7 +50,7 @@ public class AutorControlador {
     }
 
     @PostMapping("/saveNoti")
-    public String save(@RequestParam("file") MultipartFile notifile, MultipartFile usufile, Noticia noticia, String autorNombre, String autorApellido) throws IOException, ArchivoInvalidoException {
+    public String save(@RequestParam("file") MultipartFile notifile, MultipartFile usufile, Noticia noticia, String autorNombre, String autorApellido, Integer sueldoMensual) throws IOException, ArchivoInvalidoException {
 
         if (autorNombre != null && autorApellido != null) {
             Autor autor = new Autor();
