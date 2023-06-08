@@ -33,8 +33,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             />
           </a>
         </div>
-        <h3 class="text-light" th:if="${#request.getRequestURI() == '/autores'}">Administración de Autores</h3>
-        <h3 class="text-light" th:if="${#request.getRequestURI() == '/noticias'}">Administración de Noticias</h3>
+        <h3
+          class="text-light"
+          th:if="${#request.getRequestURI() == '/autores'}"
+        >
+          Administración de Autores
+        </h3>
+        <h3
+          class="text-light"
+          th:if="${#request.getRequestURI() == '/noticias'}"
+        >
+          Administración de Noticias
+        </h3>
         <div class="button-container">
           <ul class="navbar-nav">
             <li class="nav-item">
@@ -63,9 +73,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 aria-expanded="false"
               >
                 <img
+                  th:if="${session.usuariosession != null && session.usuariosession.imagen != null}"
+                  th:src="@{/imagen/perfil/__${session.usuariosession.id}__}"
+                  alt="Imagen"
+                  class="img-perfil"
+                />
+
+                <img
+                  th:unless="${session.usuariosession != null && session.usuariosession.imagen != null}"
                   th:src="@{/images/user.png}"
                   width="20px"
-                  alt="UserImage"
+                  alt="Imagen"
                   class="pb-1"
                 />
               </a>
@@ -84,6 +102,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     class="dropdown-item"
                     th:href="@{/registro}"
                     >Registrarme</a
+                  >
+                </li>
+                <li>
+                  <a
+                    sec:authorize="hasAnyRole('USER', 'ADMIN', 'AUTOR')"
+                    class="dropdown-item"
+                    th:href="@{/perfil}"
+                    >Editar Perfil</a
                   >
                 </li>
                 <li>

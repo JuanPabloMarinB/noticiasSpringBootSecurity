@@ -32,8 +32,12 @@
   justify-content: space-between;
 }
 .boton-registro {
+  display: block;
   width: 200px;
   height: 50px;
+  line-height: 50px;
+  text-align: center;
+  text-decoration: none;
   font-size: 25px;
   border-radius: 12px;
   border-radius: 12px;
@@ -55,7 +59,12 @@
 .item-redes-sociales img {
   width: 30px;
   object-fit: cover;
+  transition: all 0.4s ease;
 }
+.item-redes-sociales img:hover {
+  scale: 1.5;
+}
+
 .seccion-der {
   border-radius: 10px;
   display: grid;
@@ -73,7 +82,12 @@
   gap: 15px;
   margin: auto 5%;
 }
-
+.seccion-der img {
+  transition: all 0.4s ease;
+}
+.seccion-der:hover img:hover {
+  scale: 1.05;
+}
 #imagen1-seccion-der {
   width: 100%;
   height: 100%;
@@ -158,7 +172,7 @@
   }
 }
 @media (max-width: 680px) {
-  .seccion-izq{
+  .seccion-izq {
     margin: auto;
   }
   .botones-hero {

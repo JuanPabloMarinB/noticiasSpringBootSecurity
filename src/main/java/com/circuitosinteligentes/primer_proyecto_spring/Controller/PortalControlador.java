@@ -34,7 +34,7 @@ public class PortalControlador {
     @Autowired
     private IUsuarioServicio usuarioServicio;
 
-    @GetMapping("/")//URL a donde me dirige
+    @GetMapping("/") // URL a donde me dirige
     public String index() {
         return "inicio.html";
     }
@@ -69,17 +69,17 @@ public class PortalControlador {
             model.addAttribute("errorPassword", "La contraseña es inválida");
         } catch (Password2InvalidoException e) {
             model.addAttribute("errorPassword2", "Las contraseñas no coinciden");
-        }catch (ArchivoInvalidoException e) {
+        } catch (ArchivoInvalidoException e) {
             model.addAttribute("errorAlCargarArchivo", "El archivo es nulo");
         } catch (Exception e) {
             model.addAttribute("error", "Error al registrar usuario");
         }
         return "registro.html";
     }
-    
+
     @GetMapping("/login")
-    public String login(@RequestParam(required=false) String error, ModelMap model) {
-        if(error != null){
+    public String login(@RequestParam(required = false) String error, ModelMap model) {
+        if (error != null) {
             model.put("error", "Usuario o contraseña inválidos");
         }
         return "login.html";
@@ -89,24 +89,23 @@ public class PortalControlador {
     @GetMapping("/inicio")
     public String inicio(HttpSession session, ModelMap model) {
         Usuario logueado = (Usuario) session.getAttribute("usuariosession");
-        System.out.println(logueado.getRol());
-        if(logueado.getRol().toString().equals("ADMIN")){
+        if (logueado.getRol().toString().equals("ADMIN")) {
             return "redirect:/dashboard";
         }
-        if(logueado.getRol().toString().equals("AUTOR")){
+        if (logueado.getRol().toString().equals("AUTOR")) {
             return "redirect:/autorPortal";
         }
         return "redirect:/portal";
     }
-    
+
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_AUTOR')")
     @GetMapping("/perfil")
     public String perfil(HttpSession session, ModelMap model) {
         Usuario logueado = (Usuario) session.getAttribute("usuariosession");
-        model.put("usuario",logueado );
+        model.addAttribute("usuario", logueado);
         return "usuario_update.html";
     }
-    
+
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_AUTOR')")
     @PostMapping("/perfil/{id}")
     public String update(MultipartFile file, @PathVariable Integer id, @RequestParam("nombre") String nombre,
@@ -114,17 +113,17 @@ public class PortalControlador {
             @RequestParam("email") String email,
             @RequestParam("password") String password,
             @RequestParam("password2") String password2, ModelMap model) {
-        
+
         try {
             usuarioServicio.update(file, nombre, apellido, email, password, password2, id);
-            model.put("exito","Usuario actualizado correctamente" );
+            model.put("exito", "Usuario actualizado correctamente");
             return "index.html";
-        }catch (Exception e){
+        } catch (Exception e) {
             model.put("error", e.getMessage());
             model.put("nombre", nombre);
             model.put("apellido", apellido);
             model.put("email", email);
-        return "usuario_update.html";}
+            return "usuario_update.html";
+        }
     }
 }
-
