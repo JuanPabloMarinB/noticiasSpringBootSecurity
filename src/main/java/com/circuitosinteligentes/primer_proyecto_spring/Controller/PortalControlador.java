@@ -5,7 +5,7 @@
 package com.circuitosinteligentes.primer_proyecto_spring.Controller;
 
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Usuario;
-import com.circuitosinteligentes.primer_proyecto_spring.Servicio.IUsuarioServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.interfaces.IUsuarioServicio;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.ApellidoInvalidoException;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.ArchivoInvalidoException;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.EmailInvalidoException;
