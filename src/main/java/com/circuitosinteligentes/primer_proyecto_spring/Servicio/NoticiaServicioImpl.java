@@ -4,6 +4,7 @@
  */
 package com.circuitosinteligentes.primer_proyecto_spring.Servicio;
 
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.INoticiaServicio;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Noticia;
 import com.circuitosinteligentes.primer_proyecto_spring.Repositorio.Repositorio;
 import java.util.List;
@@ -27,8 +28,9 @@ public class NoticiaServicioImpl implements INoticiaServicio {
     }
 
     @Override
-    public Optional<Noticia> getById(Integer id) {
-        return noticiaRepositorio.findById(id);
+    public Noticia getById(Integer id) {
+        Optional<Noticia> noticia = noticiaRepositorio.findById(id);
+        return noticia.orElse(null);
     }
 
     @Override

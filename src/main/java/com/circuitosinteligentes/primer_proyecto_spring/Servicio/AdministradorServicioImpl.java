@@ -6,6 +6,9 @@ package com.circuitosinteligentes.primer_proyecto_spring.Servicio;
 
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Autor;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Noticia;
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.IAdministradorServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.IAutorServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.INoticiaServicio;
 import com.circuitosinteligentes.primer_proyecto_spring.Repositorio.RepositorioAdministrador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

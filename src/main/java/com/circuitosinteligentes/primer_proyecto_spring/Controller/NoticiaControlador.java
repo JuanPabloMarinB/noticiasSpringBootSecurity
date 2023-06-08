@@ -6,8 +6,8 @@ package com.circuitosinteligentes.primer_proyecto_spring.Controller;
 
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Autor;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Noticia;
-import com.circuitosinteligentes.primer_proyecto_spring.Servicio.IAutorServicio;
-import com.circuitosinteligentes.primer_proyecto_spring.Servicio.INoticiaServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.IAutorServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.INoticiaServicio;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -99,14 +99,14 @@ public class NoticiaControlador {
     @GetMapping("/noticia/{id}") // URL a donde me dirige
     public String noticia(@PathVariable Integer id, ModelMap modelmap) {// ModelMap permite pasar valores al HTML para
                                                                         // que realice operaciones
-        Noticia noticia = noticiaServicio.getById(id).get();
+        Noticia noticia = noticiaServicio.getById(id);
         modelmap.addAttribute("noticia", noticia);
         return "noticiaPage.html";
     }
 
     @GetMapping("/editar/{id}")
     public String edit(@PathVariable Integer id, ModelMap modelmap) {
-        Noticia noticia = noticiaServicio.getById(id).get();
+        Noticia noticia = noticiaServicio.getById(id);
         Autor autor = noticia.getAutor();
         modelmap.addAttribute("autor", autor);
         modelmap.addAttribute("noticia", noticia);
@@ -115,7 +115,7 @@ public class NoticiaControlador {
 
     @PostMapping("/update")
     public String update(@ModelAttribute("noticia") Noticia noticia) {
-        Noticia noticiaActual = noticiaServicio.getById(noticia.getId()).get();
+        Noticia noticiaActual = noticiaServicio.getById(noticia.getId());
         Autor autorActual = noticiaActual.getAutor();
         autorActual.setNombre(noticia.getAutor().getNombre());
         autorActual.setApellido(noticia.getAutor().getApellido());

@@ -5,6 +5,7 @@
 package com.circuitosinteligentes.primer_proyecto_spring.Servicio;
 
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Autor;
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.IAutorServicio;
 import com.circuitosinteligentes.primer_proyecto_spring.Repositorio.RepositorioAutor;
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +28,9 @@ public class AutorServicioImpl implements IAutorServicio {
     }
 
     @Override
-    public Optional<Autor> getById(Integer id) {
-        return autorRepositorio.findById(id);
+    public Autor getById(Integer id) {
+        Optional<Autor> autor = autorRepositorio.findById(id);
+        return autor.orElse(null);
     }
 
     @Override
