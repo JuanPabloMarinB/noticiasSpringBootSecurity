@@ -6,8 +6,8 @@ package com.circuitosinteligentes.primer_proyecto_spring.Controller;
 
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Autor;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Noticia;
-import com.circuitosinteligentes.primer_proyecto_spring.Servicio.IAutorServicio;
-import com.circuitosinteligentes.primer_proyecto_spring.Servicio.INoticiaServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.IAutorServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.INoticiaServicio;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -37,7 +37,7 @@ public class AutorControlador {
 
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_AUTOR')")
     @GetMapping("/autorPortal")
-    public String panelAutor(ModelMap modelmap) {
+    public String panelAutor() {
         return "redirect:/autores";
     }
     
@@ -45,14 +45,13 @@ public class AutorControlador {
     public String save(@RequestParam("file") MultipartFile file, Noticia noticia, String autorNombre, String autorApellido, Integer sueldoMensual) throws IOException {
 
         String rutaProyecto = Paths.get("").toAbsolutePath().toString().replace("\\", "/");
-        System.out.println(rutaProyecto);
 
         if (autorNombre != null && autorApellido != null) {
             Autor autor = new Autor();
             autor.setNombre(autorNombre);
             autor.setApellido(autorApellido);
             autor.setSueldoMensual(sueldoMensual);
-            autor = autorServ.save(autor);
+            autorServ.save(autor);
             noticia.setAutor(autor);
 
             if (!file.isEmpty()) {
@@ -73,7 +72,7 @@ public class AutorControlador {
     public String edit(@PathVariable Integer id, ModelMap modelmap) {
         List<Autor> autor = autorServ.findAll();
         modelmap.addAttribute("autor", autor);
-        Noticia noticia = noticiaServicio.getById(id).get();
+        Noticia noticia = noticiaServicio.getById(id);
         modelmap.addAttribute("noticia", noticia);
         return "editAutor.html";
     }

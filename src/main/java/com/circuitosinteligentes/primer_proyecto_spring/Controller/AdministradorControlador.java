@@ -6,8 +6,8 @@ package com.circuitosinteligentes.primer_proyecto_spring.Controller;
 
 import com.circuitosinteligentes.primer_proyecto_spring.Enumeraciones.Rol;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Autor;
-import com.circuitosinteligentes.primer_proyecto_spring.Servicio.IAutorServicio;
-import com.circuitosinteligentes.primer_proyecto_spring.Servicio.INoticiaServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.IAutorServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.INoticiaServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -48,6 +48,7 @@ public class AdministradorControlador {
         autor.setApellido(apellido);
         autor.setSueldoMensual(sueldoMensual);
         autor.setRol(Rol.AUTOR);
+        System.out.println(autor.getNombre());
         autorServicio.save(autor);
         modelMap.addAttribute("autor", autor);
 

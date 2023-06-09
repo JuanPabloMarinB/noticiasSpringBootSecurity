@@ -7,15 +7,18 @@ package com.circuitosinteligentes.primer_proyecto_spring.Servicio;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Administrador;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Autor;
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Noticia;
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.IAutorNoticiaServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.IAutorServicio;
 import com.circuitosinteligentes.primer_proyecto_spring.Repositorio.Repositorio;
 import com.circuitosinteligentes.primer_proyecto_spring.Repositorio.RepositorioAutor;
+
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- *
  * @author Julian_Velasco
  */
 @Service
@@ -33,8 +36,8 @@ public class AutorNoticiaServicioImpl implements IAutorNoticiaServicio {
     }
 
     @Override
-    public Optional<Noticia> getById(Integer id) {
-        return repositorioNoticia.findById(id);
+    public Noticia getById(Integer id) {
+        return repositorioNoticia.getById(id);
     }
 
     @Override
@@ -43,8 +46,9 @@ public class AutorNoticiaServicioImpl implements IAutorNoticiaServicio {
     }
 
     @Override
-    public Optional<Autor> getAutorById(Integer id) {
-        return autorServicio.getById(id);
+    public Autor getAutorById(Integer id) {
+        Autor autor = autorServicio.getById(id);
+        return autor;
     }
 
     @Override
@@ -60,7 +64,8 @@ public class AutorNoticiaServicioImpl implements IAutorNoticiaServicio {
     }
 
     @Override
-    public Optional<Administrador> getAdministradorByNoticiaId(Integer id) {
-        return repositorioNoticia.findById(id).map(Noticia::getAdministrador);
+    public Administrador getAdministradorByNoticiaId(Integer id) {
+        Optional<Administrador> admin = repositorioNoticia.findById(id).map(Noticia::getAdministrador);
+        return admin.orElse(null);
     }
 }

@@ -6,6 +6,7 @@ package com.circuitosinteligentes.primer_proyecto_spring.Servicio;
 
 import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Usuario;
 import com.circuitosinteligentes.primer_proyecto_spring.Enumeraciones.Rol;
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.IUsuarioServicio;
 import com.circuitosinteligentes.primer_proyecto_spring.Repositorio.RepositorioUsuario;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.ApellidoInvalidoException;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.EmailInvalidoException;
@@ -45,8 +46,9 @@ public class UsuarioServicioImpl implements IUsuarioServicio, UserDetailsService
     }
 
     @Override
-    public Optional<Usuario> getById(Integer id) {
-        return usuarioRepositorio.findById(id);
+    public Usuario getById(Integer id) {
+        Optional<Usuario> usuario = usuarioRepositorio.findById(id);
+        return usuario.orElse(null);
     }
 
     @Override

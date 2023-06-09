@@ -27,25 +27,21 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
       <table class="table table-bordered border-dark-subtle mt-3">
         <thead>
           <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Título</th>
-            <th scope="col">Cuerpo</th>
-            <th scope="col">Nombre Autor</th>
-            <th scope="col">Apellido Autor</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Sueldo Mensual</th>
             <th colspan="2" class="text-center">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr th:each="noticia:${noticia}">
-            <td th:text="${noticia.id}"></td>
-            <td th:text="${noticia.titulo}"></td>
-            <td th:text="${noticia.cuerpo}"></td>
-            <td th:text="${noticia.autor.nombre}"></td>
-            <td th:text="${noticia.autor.apellido}"></td>
+          <tr th:each="autor:${autores}">
+            <td th:text="${autor.nombre}"></td>
+            <td th:text="${autor.apellido}"></td>
+            <td th:text="${autor.sueldoMensual}"></td>
             <td class="text-center">
               <a
                 class="btn btn-warning"
-                th:href="@{/editarNoti/__${noticia.id}__}"
+                th:href="@{/editar-autor/__${autor.id}__}"
                 >Editar</a
               >
             </td>

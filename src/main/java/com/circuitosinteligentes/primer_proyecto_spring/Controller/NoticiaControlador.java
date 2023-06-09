@@ -4,30 +4,19 @@
  */
 package com.circuitosinteligentes.primer_proyecto_spring.Controller;
 
-import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Autor;
-import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Imagen;
-import com.circuitosinteligentes.primer_proyecto_spring.Entidades.Noticia;
-import com.circuitosinteligentes.primer_proyecto_spring.Servicio.IAutorServicio;
-import com.circuitosinteligentes.primer_proyecto_spring.Servicio.INoticiaServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.Entidades.*;
 import com.circuitosinteligentes.primer_proyecto_spring.Servicio.ImagenServicioImp;
 import com.circuitosinteligentes.primer_proyecto_spring.exceptions.ArchivoInvalidoException;
-import java.io.File;
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.IAutorServicio;
+import com.circuitosinteligentes.primer_proyecto_spring.Interfaces.INoticiaServicio;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import javax.servlet.annotation.MultipartConfig;
+import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -65,8 +54,8 @@ public class NoticiaControlador {
     
     @GetMapping("/autores")
     public String indexAutor(ModelMap modelmap) {
-        List<Noticia> noticias = noticiaServicio.findAll();
-        modelmap.addAttribute("noticia", noticias);
+        List<Autor> autores = autorServ.findAll();
+        modelmap.addAttribute("autores", autores);
         return "autor.html";
     }
 
@@ -97,7 +86,7 @@ public class NoticiaControlador {
             autor.setNombre(autorNombre);
             autor.setApellido(autorApellido);
             autor.setSueldoMensual(sueldoMensual);
-            autor = autorServ.save(autor);
+            autorServ.save(autor);
             noticia.setAutor(autor);
             Imagen imagen = imagenServicio.save(file);
             
@@ -110,27 +99,23 @@ public class NoticiaControlador {
     @GetMapping("/noticia/{id}") // URL a donde me dirige
     public String noticia(@PathVariable Integer id, ModelMap modelmap) {// ModelMap permite pasar valores al HTML para
         // que realice operaciones
-        Noticia noticia = noticiaServicio.getById(id).get();
+        Noticia noticia = noticiaServicio.getById(id);
         modelmap.addAttribute("noticia", noticia);
         return "noticiaPage.html";
     }
     
     @GetMapping("/editar/{id}")
     public String edit(@PathVariable Integer id, ModelMap modelmap) {
-        Noticia noticia = noticiaServicio.getById(id).get();
+        Noticia noticia = noticiaServicio.getById(id);
         Autor autor = noticia.getAutor();
         modelmap.addAttribute("autor", autor);
         modelmap.addAttribute("noticia", noticia);
         return "edit.html";
     }
-    
+
     @PostMapping("/update/{id}")
     public String update(MultipartFile file, @ModelAttribute("noticia") Noticia noticia) throws ArchivoInvalidoException {
-        Optional<Noticia> resNoticia = noticiaServicio.getById(noticia.getId());
-        Noticia noticiaActual = new Noticia();
-        if (resNoticia.isPresent()) {
-            noticiaActual = resNoticia.get();
-        }
+        Noticia noticiaActual = noticiaServicio.getById(noticia.getId());
         Autor autorActual = noticiaActual.getAutor();
         autorActual.setNombre(noticia.getAutor().getNombre());
         autorActual.setApellido(noticia.getAutor().getApellido());
